@@ -7,7 +7,7 @@ import colorlover
 import rules
 from dash_style import discrete_background_color_bins
 
-pdfFileObj = open('dab_502.pdf', 'rb')
+pdfFileObj = open('dab_106.pdf', 'rb')
 pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
 
 
@@ -52,7 +52,11 @@ page1 = pageObj.extractText()
 page_blob = pageObj.extractText()
 page1
     
-df2, df3, clo1, clo2 = rules.rule_2(page1)
+df2, df3, clo1, clo2 = rules.rule_2_cd(page1)
+
+df4, df5, clo3, clo4 = rules.rule_2_pd(page1)
+
+df6, df7, clo5, clo6 = rules.rule_2_ad(page1)
 
 
 
@@ -81,6 +85,7 @@ app.layout = html.Div([
         style_data=dict(backgroundColor="lavender"),
         fill_width=False
     ),
+    html.H4('CLO verb distance - Cognitive Domain'),
     html.H4("CLO: " + str(clo1[0])),
     html.P(id='table_out1'),
     dash_table.DataTable(
@@ -94,13 +99,67 @@ app.layout = html.Div([
         fill_width=False,
         style_data_conditional = styles
     ),
-        html.H4("CLO: "+ str(clo2[0])),
+    html.H4("CLO: "+ str(clo2[0])),
     html.P(id='table_out2'),
     dash_table.DataTable(
         id='table2',
         columns=[{"name": i, "id": i} 
                  for i in df3.columns],
         data=df3.to_dict('records'),
+        style_cell=dict(textAlign='left'),
+        style_header=dict(backgroundColor="paleturquoise"),
+        style_data=dict(backgroundColor="lavender"),
+        fill_width=False,
+        style_data_conditional = styles1
+    ),
+    html.H4('CLO verb distance - Psychomotor Domain'),
+    html.H4("CLO: "+ str(clo3[0])),
+    html.P(id='table_out3'),
+    dash_table.DataTable(
+        id='table3',
+        columns=[{"name": i, "id": i} 
+                 for i in df4.columns],
+        data=df4.to_dict('records'),
+        style_cell=dict(textAlign='left'),
+        style_header=dict(backgroundColor="paleturquoise"),
+        style_data=dict(backgroundColor="lavender"),
+        fill_width=False,
+        style_data_conditional = styles1
+    ),
+    html.H4("CLO: "+ str(clo4[0])),
+    html.P(id='table_out4'),
+    dash_table.DataTable(
+        id='table4',
+        columns=[{"name": i, "id": i} 
+                 for i in df5.columns],
+        data=df5.to_dict('records'),
+        style_cell=dict(textAlign='left'),
+        style_header=dict(backgroundColor="paleturquoise"),
+        style_data=dict(backgroundColor="lavender"),
+        fill_width=False,
+        style_data_conditional = styles1
+    ),
+    html.H4('CLO verb distance - Affective Domain'),
+    html.H4("CLO: "+ str(clo5[0])),
+    html.P(id='table_out5'),
+    dash_table.DataTable(
+        id='table5',
+        columns=[{"name": i, "id": i} 
+                 for i in df6.columns],
+        data=df6.to_dict('records'),
+        style_cell=dict(textAlign='left'),
+        style_header=dict(backgroundColor="paleturquoise"),
+        style_data=dict(backgroundColor="lavender"),
+        fill_width=False,
+        style_data_conditional = styles1
+    ),
+    html.H4("CLO: "+ str(clo6[0])),
+    html.P(id='table_out6'),
+    dash_table.DataTable(
+        id='table6',
+        columns=[{"name": i, "id": i} 
+                 for i in df7.columns],
+        data=df7.to_dict('records'),
         style_cell=dict(textAlign='left'),
         style_header=dict(backgroundColor="paleturquoise"),
         style_data=dict(backgroundColor="lavender"),
@@ -121,12 +180,33 @@ app.layout = html.Div([
     Output('table_out2', 'children'), 
     Input('table2', 'active_cell'))
     
+@app.callback(
+    Output('table_out3', 'children'), 
+    Input('table3', 'active_cell'))
+    
+@app.callback(
+    Output('table_out4', 'children'), 
+    Input('table4', 'active_cell'))
+    
+@app.callback(
+    Output('table_out5', 'children'), 
+    Input('table5', 'active_cell'))
+    
+@app.callback(
+    Output('table_out6', 'children'), 
+    Input('table6', 'active_cell'))
+    
 def update_graphs(active_cell):
     if active_cell:
         cell_data = df1.iloc[active_cell['row']][active_cell['column_id']]
         cell_data2 = df2.iloc[active_cell['row']][active_cell['column_id']]
         cell_data3 = df3.iloc[active_cell['row']][active_cell['column_id']]
-        return cell_data, cell_data2, cell_data3
+        cell_data4 = df4.iloc[active_cell['row']][active_cell['column_id']]
+        cell_data5 = df5.iloc[active_cell['row']][active_cell['column_id']]
+        cell_data6 = df6.iloc[active_cell['row']][active_cell['column_id']]
+        cell_data7 = df7.iloc[active_cell['row']][active_cell['column_id']]
+                
+        return cell_data, cell_data2, cell_data3, cell_data4, cell_data5, cell_data6, cell_data7
 
         #return f"Data: \"{cell_data}\" from table cell: {active_cell}"
     #return "Click the table"
